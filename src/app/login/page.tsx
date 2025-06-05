@@ -1,36 +1,36 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function Login() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const router = useRouter();
 
-  const isFormValid = email.trim() !== '' && password.trim() !== '';
+  const isFormValid = email.trim() !== "" && password.trim() !== "";
 
   const isEmailValid = (email: string) =>
     /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
   const handleLogin = () => {
     if (!isEmailValid(email)) {
-      alert('Please enter a valid email address.');
+      alert("Please enter a valid email address.");
       return;
     }
 
-    const storedUser = localStorage.getItem('popxUser');
+    const storedUser = localStorage.getItem("DealerDeskUser");
     if (!storedUser) {
-      alert('No user found. Please create an account.');
+      alert("No user found. Please create an account.");
       return;
     }
 
     const parsedUser = JSON.parse(storedUser);
     if (parsedUser.email === email && parsedUser.password === password) {
-      localStorage.setItem('isLoggedIn', 'true');
-      router.push('/account');
+      localStorage.setItem("isLoggedIn", "true");
+      router.push("/dashboard");
     } else {
-      alert('Invalid credentials. Please try again.');
+      alert("Invalid credentials. Please try again.");
     }
   };
 
@@ -82,8 +82,8 @@ export default function Login() {
           disabled={!isFormValid}
           className={`mt-6 py-3 w-full rounded font-semibold transition ${
             isFormValid
-              ? 'bg-[#315572] hover:bg-[#587995] text-white cursor-pointer'
-              : 'bg-gray-700 text-gray-400 cursor-not-allowed'
+              ? "bg-[#315572] hover:bg-[#587995] text-white cursor-pointer"
+              : "bg-gray-700 text-gray-400 cursor-not-allowed"
           }`}
         >
           Login

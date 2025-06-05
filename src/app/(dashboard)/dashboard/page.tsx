@@ -1,5 +1,4 @@
-// app/(dashboard)/dashboard/page.tsx
-export default function DashboardPage() {
+const DashboardPage = () => {
   return (
     <div>
       <h1 className="text-2xl font-semibold">Welcome Dealer ABC</h1>
@@ -7,3 +6,5 @@ export default function DashboardPage() {
     </div>
   );
 }
+
+export default DashboardPage
