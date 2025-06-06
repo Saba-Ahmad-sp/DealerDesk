@@ -15,7 +15,7 @@ export default function DashboardLayout({
       <Navbar toggleSidebar={() => setSidebarOpen(!sidebarOpen)} />
       <div className="flex flex-1">
         <Sidebar isOpen={sidebarOpen} />
-        <main className="flex-1 p-4 overflow-y-auto h-screen bg-[#21364A]">
+        <main className="flex-1 p-4 overflow-y-auto bg-[#21364A]">
           {children}
         </main>
       </div>

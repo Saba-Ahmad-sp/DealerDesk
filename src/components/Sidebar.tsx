@@ -24,7 +24,7 @@ const Sidebar = ({ isOpen }: { isOpen: boolean }) => {
           {navItems.map((item) => {
             const isActive = pathname === item.href;
             return (
-              <li key={item.name} className="sm">
+              <li key={item.name}>
                 <Link
                   href={item.href}
                   className={`flex items-center gap-3 px-4 py-2 rounded-md transition-colors
