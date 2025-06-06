@@ -32,6 +32,13 @@ export default function Register() {
     router.push("/dashboard");
   };
 
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (isFormValid) {
+      handleSignup();
+    }
+  };
+
   return (
     <div className="bg-[#0f1924] min-h-screen flex items-center justify-center text-white px-5 sm:p-8">
       <div className="w-full max-w-lg sm:p-8">
@@ -45,8 +52,8 @@ export default function Register() {
           </p>
         </div>
 
-        {/* Input Fields */}
-        <div className="flex flex-col gap-6">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+          {/* Full Name */}
           <div className="relative">
             <span className="absolute -top-2 left-3 bg-[#0f1924] px-1 text-xs text-[#5d90b9] font-medium">
               Full Name
@@ -57,9 +64,11 @@ export default function Register() {
               onChange={(e) => setFullName(e.target.value)}
               placeholder="Enter full name"
               className="w-full border border-gray-600 bg-transparent text-white rounded-md py-2 px-3 pt-4 text-sm outline-none focus:ring-1 focus:ring-[#5d90b9]"
+              required
             />
           </div>
 
+          {/* Email */}
           <div className="relative">
             <span className="absolute -top-2 left-3 bg-[#0f1924] px-1 text-xs text-[#5d90b9] font-medium">
               Email Address
@@ -70,9 +79,11 @@ export default function Register() {
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Enter email address"
               className="w-full border border-gray-600 bg-transparent text-white rounded-md py-2 px-3 pt-4 text-sm outline-none focus:ring-1 focus:ring-[#5d90b9]"
+              required
             />
           </div>
 
+          {/* Password */}
           <div className="relative">
             <span className="absolute -top-2 left-3 bg-[#0f1924] px-1 text-xs text-[#5d90b9] font-medium">
               Password
@@ -83,22 +94,23 @@ export default function Register() {
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Enter password"
               className="w-full border border-gray-600 bg-transparent text-white rounded-md py-2 px-3 pt-4 text-sm outline-none focus:ring-1 focus:ring-[#5d90b9]"
+              required
             />
           </div>
-        </div>
 
-        {/* Button */}
-        <button
-          onClick={handleSignup}
-          disabled={!isFormValid}
-          className={`mt-6 py-3 w-full rounded font-semibold transition ${
-            isFormValid
-              ? "bg-[#315572] hover:bg-[#587995] text-white cursor-pointer"
-              : "bg-gray-700 text-gray-400 cursor-not-allowed"
-          }`}
-        >
-          Create Account
-        </button>
+          {/* Submit Button */}
+          <button
+            type="submit"
+            disabled={!isFormValid}
+            className={`mt-2 py-3 w-full rounded font-semibold transition ${
+              isFormValid
+                ? "bg-[#315572] hover:bg-[#587995] text-white cursor-pointer"
+                : "bg-gray-700 text-gray-400 cursor-not-allowed"
+            }`}
+          >
+            Create Account
+          </button>
+        </form>
       </div>
     </div>
   );
