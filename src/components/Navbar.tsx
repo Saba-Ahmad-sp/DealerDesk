@@ -64,7 +64,10 @@ const Navbar = ({ toggleSidebar }: { toggleSidebar: () => void }) => {
         <span>{user.name}</span>
         <Link href="/cart">
           <div className="relative">
-            <ShoppingCart className="active:text-gray-300 hover:text-gray-300 transition" size={22} />
+            <ShoppingCart
+              className="active:text-gray-300 md:hover:text-gray-300 transition"
+              size={22}
+            />
             {cartCount > 0 && (
               <span className="absolute -top-1 -right-2 text-xs bg-red-600 text-white rounded-full w-4 h-4 flex items-center justify-center">
                 {cartCount}
@@ -72,7 +75,11 @@ const Navbar = ({ toggleSidebar }: { toggleSidebar: () => void }) => {
             )}
           </div>
         </Link>
-        <LogOut size={22} className="text-red-900 md:hover:text-red-600 active:text-red-600" onClick={handleLogout} />
+        <LogOut
+          size={22}
+          className="text-red-900 md:hover:text-red-600 active:text-red-600"
+          onClick={handleLogout}
+        />
       </div>
     </div>
   );
