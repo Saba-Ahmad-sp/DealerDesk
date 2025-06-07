@@ -5,6 +5,8 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { LogOut, ShoppingCart } from "lucide-react";
+import { useCart } from "@/context/CartContext";
+import Link from "next/link";
 
 interface User {
   name: string;
@@ -35,10 +37,13 @@ const Navbar = ({ toggleSidebar }: { toggleSidebar: () => void }) => {
     }
   }, [router]);
 
-    const handleLogout = () => {
-    localStorage.setItem('isLoggedIn', 'false');
-    router.push('/');
+  const handleLogout = () => {
+    localStorage.setItem("isLoggedIn", "false");
+    router.push("/");
   };
+
+  const { cart } = useCart();
+  const cartCount = cart.reduce((acc, item) => acc + item.quantity, 0);
 
   return (
     <div className="w-full bg-[#141A1F] border-b border-gray-800 shadow-[0_4px_6px_rgba(0,0,0,0.4),0_1px_3px_rgba(0,0,0,0.3)] px-4 flex justify-between">
@@ -55,10 +60,19 @@ const Navbar = ({ toggleSidebar }: { toggleSidebar: () => void }) => {
           />
         </div>
       </div>
-      <div className="flex gap-3 items-center text-[#8d8980]">
+      <div className="flex gap-3 items-center text-[#8d8980] cursor-pointer">
         <span>{user.name}</span>
-        <ShoppingCart size={22}/>
-        <LogOut size={22} className="text-red-900" onClick={handleLogout}/>
+        <Link href="/cart">
+          <div className="relative">
+            <ShoppingCart size={22} />
+            {cartCount > 0 && (
+              <span className="absolute -top-1 -right-2 text-xs bg-red-600 text-white rounded-full w-4 h-4 flex items-center justify-center">
+                {cartCount}
+              </span>
+            )}
+          </div>
+        </Link>
+        <LogOut size={22} className="text-red-900" onClick={handleLogout} />
       </div>
     </div>
   );

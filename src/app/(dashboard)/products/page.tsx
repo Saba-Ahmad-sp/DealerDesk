@@ -2,8 +2,9 @@
 
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import { useCart } from "@/context/CartContext";
 
-type Product = {
+type ProductFromAPI = {
   id: number;
   title: string;
   price: number;
@@ -11,13 +12,13 @@ type Product = {
 };
 
 const Products = () => {
-  const [products, setProducts] = useState<Product[]>([]);
+  const [products, setProducts] = useState<ProductFromAPI[]>([]);
   const API = "https://fakestoreapi.com/products";
 
   const fetchProducts = async () => {
     try {
       const data = await fetch(API);
-      const items: Product[] = await data.json();
+      const items: ProductFromAPI[] = await data.json();
       setProducts(items);
     } catch (error) {
       console.log("error getting the data", error);
@@ -27,6 +28,8 @@ const Products = () => {
   useEffect(() => {
     fetchProducts();
   }, []);
+
+  const { addToCart } = useCart();
 
   return (
     <div className="p-4">
@@ -45,9 +48,14 @@ const Products = () => {
             />
             <div className="mt-3 ml-2 flex flex-col justify-between flex-1 w-full text-gray-800">
               <p className="text-sm font-medium line-clamp-2">{item.title}</p>
-              <p className="text-sm font-bold mt-2">₹ {Math.floor(item.price * 83)}</p>
+              <p className="text-sm font-bold mt-2">
+                ₹ {Math.floor(item.price * 83)}
+              </p>
             </div>
-            <button className="text-xs mt-3 py-2 px-3 w-full bg-amber-400 rounded-xl font-semibold text-black md:hover:bg-amber-500 active:bg-amber-500 transition ">
+            <button
+              onClick={() => addToCart({ ...item, quantity: 1 })}
+              className="text-xs mt-3 py-2 px-3 w-full bg-amber-400 rounded-xl font-semibold text-black md:hover:bg-amber-500 active:bg-amber-500 transition "
+            >
               Add to Cart
             </button>
           </li>
