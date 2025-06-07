@@ -7,7 +7,7 @@ const Cart = () => {
   const { cart, increment, decrement, removeFromCart } = useCart();
 
   return (
-    <div className="p-2 px-6">
+    <div className="p-2 md:px-6">
       <h2 className="text-2xl text-center font-bold text-gray-300">
         Shopping Cart
       </h2>
