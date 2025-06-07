@@ -55,10 +55,10 @@ const Navbar = ({ toggleSidebar }: { toggleSidebar: () => void }) => {
           />
         </div>
       </div>
-      <div className="flex gap-3 items-center text-[#b49048]">
+      <div className="flex gap-3 items-center text-[#8d8980]">
         <span>{user.name}</span>
-        <ShoppingCart width={22}/>
-        <LogOut width={22} className="text-red-900" onClick={handleLogout}/>
+        <ShoppingCart size={22}/>
+        <LogOut size={22} className="text-red-900" onClick={handleLogout}/>
       </div>
     </div>
   );
