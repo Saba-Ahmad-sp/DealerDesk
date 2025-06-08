@@ -2,18 +2,25 @@
 
 import { useCart } from "@/context/CartContext";
 import Image from "next/image";
+import { useState } from "react";
 
 const Cart = () => {
-  const { cart, increment, decrement, removeFromCart } = useCart();
-
+  const { cart, increment, decrement, removeFromCart, placeOrder } = useCart();
+  const [success, setSuccess] = useState(false);
   const totalAmount = cart.reduce(
     (total, item) => total + item.price * 83 * item.quantity,
     0
   );
 
+  const handlePlaceOrder = () => {
+    placeOrder();
+    setSuccess(true);
+    setTimeout(() => setSuccess(false), 3000);
+  };
+
   return (
     <div className="p-2 md:px-6">
-      <h2 className="text-2xl text-center font-bold text-gray-300">
+      <h2 className="text-3xl text-center font-bold text-gray-300">
         Shopping Cart
       </h2>
       <ul className="mt-8 space-y-2">
@@ -73,11 +80,22 @@ const Cart = () => {
         ))}
       </ul>
       {cart.length > 0 && (
-        <div className="mt-6 text-left pr-4 md:pr-10">
-          <p className="text-lg font-semibold text-white">
-            Total: ₹ {Math.floor(totalAmount)}
+        <div className="mt-6 text-left   flex justify-between">
+          <p className="text-sm  md:text-lg font-semibold text-white  py-1 rounded-full">
+            Total Amount: ₹ {Math.floor(totalAmount)}
           </p>
+          <button
+            onClick={handlePlaceOrder}
+            className=" text-sm md:text-lg font-semibold text-white bg-green-500 md:hover:bg-green-600 active:bg-green-800 transition cursor-pointer px-4 py-1 rounded-full"
+          >
+            Place Order
+          </button>
         </div>
+      )}
+      {success && (
+        <p className="text-green-500 font-semibold mt-8 transition text-center ">
+          Order placed successfully!
+        </p>
       )}
     </div>
   );

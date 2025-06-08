@@ -6,7 +6,6 @@ import {
   useContext,
   useState,
   ReactNode,
-  Children,
 } from "react";
 
 type Product = {
@@ -17,29 +16,48 @@ type Product = {
   quantity: number;
 };
 
+type Order = {
+  id: string;
+  items: Product[];
+  date: string;
+  total: number;
+}
+
 type CartContextType = {
   cart: Product[];
+  orders: Order[];
   addToCart: (product: Product) => void;
   increment: (id: number) => void;
   decrement: (id: number) => void;
   removeFromCart: (id: number) => void;
+  placeOrder: () => void; 
 };
+
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export const CartProvider = ({ children }: { children: ReactNode }) => {
   const [cart, setCart] = useState<Product[]>([]);
+  const [orders, setOrders] = useState<Order[]>([]);
 
   useEffect(() => {
     const storedCart = localStorage.getItem("cart");
+    const storedOrders = localStorage.getItem("orders");
     if(storedCart) {
       setCart(JSON.parse(storedCart))
+    }
+    if(storedOrders) {
+      setOrders(JSON.parse(storedOrders))
     }
   }, []);
 
   useEffect(() => {
     localStorage.setItem("cart", JSON.stringify(cart))
   }, [cart]);
+
+  useEffect(() => {
+    localStorage.setItem("orders", JSON.stringify(orders))
+  }, [orders]);
 
   const addToCart = (product: Product) => {
     setCart((prev) => {
@@ -78,9 +96,25 @@ const decrement = (productId: number) => {
 const removeFromCart = (id: number) => {
   setCart(prevCart => prevCart.filter(item => item.id !== id));
 };
+
+const placeOrder = () => {
+  if(cart.length === 0) return;
+
+  const newOrder: Order = {
+    id: Math.random().toString(36).substring(2, 10).toUpperCase(),
+    items: cart,
+    date: new Date().toLocaleString(),
+    total: cart.reduce((acc, item) => acc + item.price * 83 * item.quantity, 0)
+  }
+
+  setOrders((prev) => [...prev, newOrder]);
+  setCart([]);
+  localStorage.removeItem('cart');
+};
+
   
   return (
-    <CartContext.Provider value={{cart, addToCart, increment, decrement, removeFromCart}}>
+    <CartContext.Provider value={{cart, orders, addToCart, increment, decrement, removeFromCart, placeOrder}}>
       {children}
     </CartContext.Provider>
   )
