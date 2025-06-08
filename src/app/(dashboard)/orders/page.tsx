@@ -11,7 +11,7 @@ const Orders = () => {
   };
 
   return (
-    <div className="p-4 md:p-8 text-white">
+    <div className="p-2 md:px-6 text-white">
       <h2 className="text-3xl font-bold mb-6 text-center">Your Orders</h2>
 
       {orders.length === 0 ? (
@@ -25,28 +25,41 @@ const Orders = () => {
               .map((order) => (
                 <li
                   key={order.id}
-                  className="bg-gray-400 text-black p-4 rounded-lg shadow"
+                  className="bg-white text-black p-4 rounded-lg shadow"
                 >
                   <div className="flex justify-between items-center">
-                    <div>
+                    <div className="grid grid-cols-[auto_1fr] gap-x-2 gap-y-0.5">
                       <p>
-                        <strong>Order #:</strong> #{order.id}
+                        <strong>Order ID:</strong>
+                      </p>
+                      <p>#{order.id}</p>
+
+                      <p>
+                        <strong>Date:</strong>
                       </p>
                       <p>
-                        <strong>Date:</strong>{" "}
-                        {new Date(order.date).toISOString().slice(0, 10)}
+                        {new Date(order.date)
+                          .toISOString()
+                          .slice(0, 10)
+                          .split("-")
+                          .reverse()
+                          .join("-")}
                       </p>
+
                       <p>
-                        <strong>Total:</strong> ₹ {Math.floor(order.total)}
+                        <strong>Total:</strong>
                       </p>
+                      <p>₹ {Math.floor(order.total)}</p>
+
                       <p>
-                        <strong>Items:</strong> {order.items.length}
+                        <strong>Items:</strong>
                       </p>
+                      <p>{order.items.length}</p>
                     </div>
 
                     <button
                       onClick={() => toggleDetails(order.id)}
-                      className="text-gray-800 text-sm"
+                      className="text-gray-500 md:hover:text-gray-900 active:text-black text-sm transition"
                     >
                       View Details
                     </button>
