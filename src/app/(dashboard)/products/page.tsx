@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useCart } from "@/context/CartContext";
+import { Search } from "lucide-react";
 
 type ProductFromAPI = {
   id: number;
@@ -13,6 +14,7 @@ type ProductFromAPI = {
 
 const Products = () => {
   const [products, setProducts] = useState<ProductFromAPI[]>([]);
+  const [search, setSearch] = useState("");
   const API = "https://fakestoreapi.com/products";
 
   const fetchProducts = async () => {
@@ -31,10 +33,25 @@ const Products = () => {
 
   const { cart, addToCart, increment, decrement } = useCart();
 
+   const filteredProducts = products.filter((product) =>
+    product.title.toLowerCase().includes(search.toLowerCase())
+  );
+
   return (
     <div className="p-4">
+      <div className="relative max-w-md mx-auto mb-6">
+        <input
+          type="text"
+          placeholder="Search products..."
+          className="w-full pl-10 pr-4 py-2 border bg-white border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-amber-400 text-sm"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 w-4 h-4" />
+      </div>
+
       <ul className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-        {products.map((item) => {
+        {filteredProducts.map((item) => {
           const inCart = cart.find((product) => product.id === item.id);
           return (
             <li
@@ -59,14 +76,14 @@ const Products = () => {
                 <div className="mt-3 flex items-center justify-between gap-2 w-full bg-amber-400 rounded-xl py-2 px-3 text-black font-semibold text-xs">
                   <button
                     onClick={() => decrement(item.id)}
-                    className="px-2 md:hover:text-red-700 active:text-red-700"
+                    className="px-2 md:hover:text-red-700 active:text-red-700 transition"
                   >
                     −
                   </button>
                   <span>{inCart.quantity}</span>
                   <button
                     onClick={() => increment(item.id)}
-                    className="px-2 md:hover:text-green-700 active:text-green-700"
+                    className="px-2 md:hover:text-green-700 active:text-green-700 transition"
                   >
                     +
                   </button>
