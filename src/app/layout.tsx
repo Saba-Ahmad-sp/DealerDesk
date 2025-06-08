@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { CartProvider } from '@/context/CartContext'
+import { CartProvider } from "@/context/CartContext";
+import { Toaster } from "react-hot-toast";
 // import { Geist, Geist_Mono } from "next/font/google";
 
 // const geistSans = Geist({
@@ -25,11 +26,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className=""
-        // className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      <body>
         <CartProvider>{children}</CartProvider>
+        <Toaster position="bottom-center" toastOptions={{ duration: 3000 }} />
       </body>
     </html>
   );

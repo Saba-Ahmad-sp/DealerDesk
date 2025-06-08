@@ -3,10 +3,12 @@
 import { useCart } from "@/context/CartContext";
 import Image from "next/image";
 import { useState } from "react";
+import toast from "react-hot-toast";
+import Products from "../products/page";
 
 const Cart = () => {
   const { cart, increment, decrement, removeFromCart, placeOrder } = useCart();
-  const [success, setSuccess] = useState(false);
+
   const totalAmount = cart.reduce(
     (total, item) => total + item.price * 83 * item.quantity,
     0
@@ -14,8 +16,18 @@ const Cart = () => {
 
   const handlePlaceOrder = () => {
     placeOrder();
-    setSuccess(true);
-    setTimeout(() => setSuccess(false), 3000);
+    toast.success("Order placed successfully!", {
+      style: {
+        borderRadius: "8px",
+        background: "#333",
+        color: "#fff",
+        marginBottom: "40px"
+      },
+      iconTheme: {
+        primary: "#10B981",
+        secondary: "#fff",
+      },
+    });
   };
 
   return (
@@ -23,7 +35,10 @@ const Cart = () => {
       <h2 className="text-3xl text-center font-bold text-gray-300">
         Shopping Cart
       </h2>
-            {cart.length > 0 && (
+      {cart.length === 0 ? (
+        <p className="text-center mt-4 text-gray-400">There is no items in your Cart add some.</p>
+      ) : (<>
+      {cart.length > 0 && (
         <div className="mt-6 text-left   flex justify-between">
           <p className="text-sm  md:text-lg font-semibold text-white  py-1 rounded-full">
             Total Amount: ₹ {Math.floor(totalAmount)}
@@ -35,11 +50,6 @@ const Cart = () => {
             Place Order
           </button>
         </div>
-      )}
-      {success && (
-        <p className="text-green-500 font-semibold mt-8 transition text-center ">
-          Order placed successfully!
-        </p>
       )}
       <ul className="mt-8 space-y-2">
         {cart.map((item) => (
@@ -71,7 +81,7 @@ const Cart = () => {
                 </p>
               </div>
             </div>
-            <div className="flex flex-col items-center gap-4 text-xs w-20 ">
+            <div className="flex flex-col items-center gap-4 text-xs w-20 pl-1 ">
               <button
                 onClick={() => removeFromCart(item.id)}
                 className=" text-xs py-1 px-3 rounded-full bg-red-300 w-full text-black md:hover:bg-red-500  transition active:bg-red-500"
@@ -97,6 +107,8 @@ const Cart = () => {
           </li>
         ))}
       </ul>
+      </>
+    )}
     </div>
   );
 };

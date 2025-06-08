@@ -15,7 +15,7 @@ const Orders = () => {
       <h2 className="text-3xl font-bold mb-6 text-center">Your Orders</h2>
 
       {orders.length === 0 ? (
-        <p className="text-center text-gray-400">No past orders yet.</p>
+        <p className="text-center mt-4 text-gray-400">No past orders yet.</p>
       ) : (
         <>
           <ul className="space-y-4">

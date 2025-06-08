@@ -60,12 +60,14 @@ const Navbar = ({ toggleSidebar }: { toggleSidebar: () => void }) => {
           />
         </div>
       </div>
-      <div className="flex gap-3 items-center text-[#8d8980] cursor-pointer">
+      <div className="flex gap-3 items-center text-[#ffffff] cursor-pointer">
+        <Link href="/dashboard">
         <span>{user.name}</span>
+        </Link>
         <Link href="/cart">
           <div className="relative">
             <ShoppingCart
-              className="active:text-gray-300 md:hover:text-gray-300 transition"
+              className="active:text-gray-400 md:hover:text-gray-400 transition"
               size={22}
             />
             {cartCount > 0 && (
@@ -77,7 +79,7 @@ const Navbar = ({ toggleSidebar }: { toggleSidebar: () => void }) => {
         </Link>
         <LogOut
           size={22}
-          className="text-red-900 md:hover:text-red-600 active:text-red-600"
+          className="text-red-400 md:hover:text-red-600 active:text-red-600"
           onClick={handleLogout}
         />
       </div>
