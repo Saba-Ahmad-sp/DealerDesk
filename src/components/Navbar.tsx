@@ -57,12 +57,14 @@ const Navbar = ({ toggleSidebar }: { toggleSidebar: () => void }) => {
             alt="Dealer Desk Logo"
             fill
             className="object-contain"
+            priority
+            sizes="(max-width: 768px) 104px, 144px"
           />
         </div>
       </div>
       <div className="flex gap-3 items-center text-[#ffffff] cursor-pointer">
         <Link href="/dashboard">
-        <span>{user.name}</span>
+          <span>{user.name}</span>
         </Link>
         <Link href="/cart">
           <div className="relative">

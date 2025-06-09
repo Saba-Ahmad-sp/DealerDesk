@@ -12,33 +12,51 @@ type ProductFromAPI = {
   image: string;
 };
 
+const INR_CONVERSION_RATE = 83;
+
+// Skeleton shimmer card
+const SkeletonCard = () => (
+  <li className="bg-white rounded-2xl p-4 flex flex-col items-center justify-between shadow-md h-full animate-pulse">
+    <div className="w-36 h-28 bg-gray-200 rounded-xl mb-3" />
+    <div className="w-full space-y-2">
+      <div className="h-4 bg-gray-200 rounded w-5/6" />
+      <div className="h-4 bg-gray-200 rounded w-1/2" />
+    </div>
+    <div className="mt-3 h-8 w-full bg-gray-200 rounded-xl" />
+  </li>
+);
+
 const Products = () => {
   const [products, setProducts] = useState<ProductFromAPI[]>([]);
   const [search, setSearch] = useState("");
-  const API = "https://fakestoreapi.com/products";
+  const [loading, setLoading] = useState(true);
 
-  const fetchProducts = async () => {
-    try {
-      const data = await fetch(API);
-      const items: ProductFromAPI[] = await data.json();
-      setProducts(items);
-    } catch (error) {
-      console.log("error getting the data", error);
-    }
-  };
+  const API = "https://fakestoreapi.com/products";
+  const { cart, addToCart, increment, decrement } = useCart();
 
   useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const res = await fetch(API);
+        const data: ProductFromAPI[] = await res.json();
+        setProducts(data);
+      } catch (error) {
+        console.log("error getting the data", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchProducts();
   }, []);
 
-  const { cart, addToCart, increment, decrement } = useCart();
-
-   const filteredProducts = products.filter((product) =>
+  const filteredProducts = products.filter((product) =>
     product.title.toLowerCase().includes(search.toLowerCase())
   );
 
   return (
     <div className="p-4">
+      {/* Searchbar */}
       <div className="relative max-w-md mx-auto mb-6">
         <input
           type="text"
@@ -50,55 +68,63 @@ const Products = () => {
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 w-4 h-4" />
       </div>
 
+      {/* Products or Skeleton */}
       <ul className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-        {filteredProducts.map((item) => {
-          const inCart = cart.find((product) => product.id === item.id);
-          return (
-            <li
-              key={item.id}
-              className="bg-white rounded-2xl p-4 flex flex-col items-center justify-between shadow-md h-full"
-            >
-              <Image
-                src={item.image}
-                width={144}
-                height={112}
-                alt="Product Image"
-                className="w-36 h-28 object-contain rounded-xl"
-              />
-              <div className="mt-3 ml-2 flex flex-col justify-between flex-1 w-full text-gray-800">
-                <p className="text-sm font-medium line-clamp-2">{item.title}</p>
-                <p className="text-sm font-bold mt-2">
-                  ₹ {Math.floor(item.price * 83)}
-                </p>
-              </div>
-
-              {inCart ? (
-                <div className="mt-3 flex items-center justify-between gap-2 w-full bg-amber-400 rounded-xl py-2 px-3 text-black font-semibold text-xs">
-                  <button
-                    onClick={() => decrement(item.id)}
-                    className="px-2 md:hover:text-red-700 active:text-red-700 transition"
-                  >
-                    −
-                  </button>
-                  <span>{inCart.quantity}</span>
-                  <button
-                    onClick={() => increment(item.id)}
-                    className="px-2 md:hover:text-green-700 active:text-green-700 transition"
-                  >
-                    +
-                  </button>
-                </div>
-              ) : (
-                <button
-                  onClick={() => addToCart({ ...item, quantity: 1 })}
-                  className="text-xs mt-3 py-2 px-3 w-full bg-amber-400 rounded-xl font-semibold text-black md:hover:bg-amber-500 active:bg-amber-500 transition"
+        {loading
+          ? Array.from({ length: 15 }).map((_, i) => <SkeletonCard key={i} />)
+          : filteredProducts.map((item) => {
+              const inCart = cart.find((product) => product.id === item.id);
+              return (
+                <li
+                  key={item.id}
+                  className="bg-white rounded-2xl p-4 flex flex-col items-center justify-between shadow-md h-full"
                 >
-                  Add to Cart
-                </button>
-              )}
-            </li>
-          );
-        })}
+                  <div className="relative w-36 h-28 rounded-xl mb-3">
+                    <Image
+                      src={item.image}
+                      alt={item.title}
+                      fill
+                      className="object-contain rounded-xl"
+                      sizes="(max-width: 768px) 100px, (max-width: 1200px) 144px, 144px"
+                      priority
+                    />
+                  </div>
+                  <div className="mt-3 ml-2 flex flex-col justify-between flex-1 w-full text-gray-800">
+                    <p className="text-sm font-medium line-clamp-2">
+                      {item.title}
+                    </p>
+                    <p className="text-sm font-bold mt-2">
+                      ₹ {Math.floor(item.price * INR_CONVERSION_RATE)}
+                    </p>
+                  </div>
+
+                  {inCart ? (
+                    <div className="mt-3 flex items-center justify-between gap-2 w-full bg-amber-400 rounded-xl py-2 px-3 text-black font-semibold text-xs">
+                      <button
+                        onClick={() => decrement(item.id)}
+                        className="px-2 md:hover:text-red-700 active:text-red-700 transition"
+                      >
+                        −
+                      </button>
+                      <span>{inCart.quantity}</span>
+                      <button
+                        onClick={() => increment(item.id)}
+                        className="px-2 md:hover:text-green-700 active:text-green-700 transition"
+                      >
+                        +
+                      </button>
+                    </div>
+                  ) : (
+                    <button
+                      onClick={() => addToCart({ ...item, quantity: 1 })}
+                      className="text-xs mt-3 py-2 px-3 w-full bg-amber-400 rounded-xl font-semibold text-black md:hover:bg-amber-500 active:bg-amber-500 transition"
+                    >
+                      Add to Cart
+                    </button>
+                  )}
+                </li>
+              );
+            })}
       </ul>
     </div>
   );

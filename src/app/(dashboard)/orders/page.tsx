@@ -37,15 +37,7 @@ const Orders = () => {
                       <p>
                         <strong>Date:</strong>
                       </p>
-                      <p>
-                        {new Date(order.date)
-                          .toISOString()
-                          .slice(0, 10)
-                          .split("-")
-                          .reverse()
-                          .join("-")}
-                      </p>
-
+                      <p>{order.date.split(",")[0]}</p>
                       <p>
                         <strong>Total:</strong>
                       </p>
@@ -54,7 +46,13 @@ const Orders = () => {
                       <p>
                         <strong>Items:</strong>
                       </p>
-                      <p>{order.items.length}</p>
+                      <p>
+                        {order.items.reduce(
+                          (acc, item) => acc + item.quantity,
+                          0
+                        )}{" "}
+                        item(s)
+                      </p>
                     </div>
 
                     <button

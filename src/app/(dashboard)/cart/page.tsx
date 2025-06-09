@@ -2,12 +2,19 @@
 
 import { useCart } from "@/context/CartContext";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import Products from "../products/page";
+
 
 const Cart = () => {
+  const [hasMounted, setHasMounted] = useState(false);
   const { cart, increment, decrement, removeFromCart, placeOrder } = useCart();
+
+  useEffect(() => {
+    setHasMounted(true);
+  }, []);
+
+  if (!hasMounted) return null;
 
   const totalAmount = cart.reduce(
     (total, item) => total + item.price * 83 * item.quantity,
