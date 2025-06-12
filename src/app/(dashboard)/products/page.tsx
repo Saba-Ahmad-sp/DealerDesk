@@ -13,11 +13,12 @@ type ProductFromAPI = {
 };
 
 const INR_CONVERSION_RATE = 83;
+const ITEMS_PER_PAGE = 20;
 
 // Skeleton shimmer card
 const SkeletonCard = () => (
   <li className="bg-white rounded-2xl p-4 flex flex-col items-center justify-between shadow-md h-full animate-pulse">
-    <div className="w-36 h-28 bg-gray-200 rounded-xl mb-3" />
+    <div className="w-36 h-38 bg-gray-200 rounded-xl mb-3" />
     <div className="w-full space-y-2">
       <div className="h-4 bg-gray-200 rounded w-5/6" />
       <div className="h-4 bg-gray-200 rounded w-1/2" />
@@ -30,16 +31,40 @@ const Products = () => {
   const [products, setProducts] = useState<ProductFromAPI[]>([]);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
 
-  const API = "https://fakestoreapi.com/products";
+  const API = "https://fakestoreapi.in/api/products?limit=150";
   const { cart, addToCart, increment, decrement } = useCart();
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         const res = await fetch(API);
-        const data: ProductFromAPI[] = await res.json();
-        setProducts(data);
+        const data = await res.json();
+        
+        // Filter products with valid images
+        const validateImage = (url: string) => {
+          return new Promise<boolean>((resolve) => {
+            const img = new window.Image();
+            img.src = url;
+            img.onload = () => resolve(true);
+            img.onerror = () => resolve(false);
+          });
+        };
+
+        const productsWithValidImages = await Promise.all(
+          data.products.map(async (product: ProductFromAPI) => {
+            const isValid = await validateImage(product.image);
+            return isValid ? product : null;
+          })
+        );
+
+        // Remove nulls (invalid images)
+        const cleanedProducts = productsWithValidImages.filter(
+          (p): p is ProductFromAPI => p !== null
+        );
+
+        setProducts(cleanedProducts);
       } catch (error) {
         console.log("error getting the data", error);
       } finally {
@@ -52,6 +77,12 @@ const Products = () => {
 
   const filteredProducts = products.filter((product) =>
     product.title.toLowerCase().includes(search.toLowerCase())
+  );
+
+  const totalPages = Math.ceil(filteredProducts.length / ITEMS_PER_PAGE);
+  const paginatedProducts = filteredProducts.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE
   );
 
   return (
@@ -68,11 +99,11 @@ const Products = () => {
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 w-4 h-4" />
       </div>
 
-      {/* Products or Skeleton */}
+      {/* Products */}
       <ul className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
         {loading
           ? Array.from({ length: 15 }).map((_, i) => <SkeletonCard key={i} />)
-          : filteredProducts.map((item) => {
+          : paginatedProducts.map((item) => {
               const inCart = cart.find((product) => product.id === item.id);
               return (
                 <li
@@ -126,6 +157,29 @@ const Products = () => {
               );
             })}
       </ul>
+
+      {/* Pagination */}
+      <div className="mt-6 flex justify-center items-center gap-4">
+        <button
+          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+          disabled={currentPage === 1}
+          className="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300 disabled:opacity-50"
+        >
+          Prev
+        </button>
+        <span className="text-sm font-medium text-white">
+          Page {currentPage} of {totalPages}
+        </span>
+        <button
+          onClick={() =>
+            setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+          }
+          disabled={currentPage === totalPages}
+          className="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300 disabled:opacity-50"
+        >
+          Next
+        </button>
+      </div>
     </div>
   );
 };

@@ -3,8 +3,8 @@ import { useState } from "react";
 import { useCart } from "@/context/CartContext";
 
 const Orders = () => {
-  const { orders } = useCart();
   const [openOrderId, setOpenOrderId] = useState<string | null>(null);
+  const { orders } = useCart();
 
   const toggleDetails = (id: string) => {
     setOpenOrderId(openOrderId === id ? null : id);
@@ -38,6 +38,7 @@ const Orders = () => {
                         <strong>Date:</strong>
                       </p>
                       <p>{order.date.split(",")[0]}</p>
+                      
                       <p>
                         <strong>Total:</strong>
                       </p>

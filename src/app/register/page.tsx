@@ -2,14 +2,14 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Eye, EyeOff } from "lucide-react"; // 👈 Eye icon imports
+import { Eye, EyeOff } from "lucide-react";
 
 export default function Register() {
   const router = useRouter();
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false); // 👈 toggle state
+  const [showPassword, setShowPassword] = useState(false);
 
   const isEmailValid = (email: string) =>
     /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -91,7 +91,7 @@ export default function Register() {
               Password
             </span>
             <input
-              type={showPassword ? "text" : "password"} // 👈 Toggle input type
+              type={showPassword ? "text" : "password"}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Enter password"
@@ -103,7 +103,7 @@ export default function Register() {
               onClick={() => setShowPassword((prev) => !prev)}
               className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-200 focus:outline-none"
             >
-              {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              {showPassword ? <Eye size={18} /> : <EyeOff size={18} />}
             </button>
           </div>
 
@@ -113,7 +113,7 @@ export default function Register() {
             disabled={!isFormValid}
             className={`mt-2 py-3 w-full rounded font-semibold transition ${
               isFormValid
-                ? "bg-[#315572] hover:bg-[#587995] text-white cursor-pointer"
+                ? "bg-[#2470ad] hover:bg-[#587995] text-white cursor-pointer"
                 : "bg-gray-700 text-gray-400 cursor-not-allowed"
             }`}
           >

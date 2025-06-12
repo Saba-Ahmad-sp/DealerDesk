@@ -52,14 +52,16 @@ const Navbar = ({ toggleSidebar }: { toggleSidebar: () => void }) => {
           <Menu className="text-white" size={24} />
         </div>
         <div className="relative h-12 w-26 md:h-14 md:w-36 ml-[-14px] md:ml-[-6px]">
-          <Image
-            src="/DDlogo.png"
-            alt="Dealer Desk Logo"
-            fill
-            className="object-contain"
-            priority
-            sizes="(max-width: 768px) 104px, 144px"
-          />
+          <Link href="/dashboard">
+            <Image
+              src="/DDlogo.png"
+              alt="Dealer Desk Logo"
+              fill
+              className="object-contain"
+              priority
+              sizes="(max-width: 768px) 104px, 144px"
+            />
+          </Link>
         </div>
       </div>
       <div className="flex gap-3 items-center text-[#ffffff] cursor-pointer">

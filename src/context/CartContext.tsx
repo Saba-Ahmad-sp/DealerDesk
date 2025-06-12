@@ -1,7 +1,6 @@
 "use client";
-import { useEffect } from "react";
 
-import { createContext, useContext, useState, ReactNode } from "react";
+import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 
 type Product = {
   id: number;
